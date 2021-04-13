@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+# license removed for brevity
+import rospy
+from myCalculator.srv import *
+
+
+def keypad():
+    rospy.init_node('keypad_client_py')
+    calc_client = rospy.ServiceProxy('srv_channel', srv_param)
+    Hz = rospy.Rate(1)
+    counter=0
+    while not rospy.is_shutdown(): 
+	counter=counter+1
+	rospy.set_param('/sum_param', counter)
+        req = srv_paramRequest()
+        req.First_num = 3
+        req.Second_num = 5
+        rospy.loginfo("sending  [%d, %d]" % (req.First_num , req.Second_num))
+        Received_Resp = calc_client(req)
+        rospy.loginfo("Received response sum: %d" % Received_Resp.sum)
+	rospy.loginfo("Received response mul: %d" % Received_Resp.mul)
+	rospy.loginfo("Received response sub: %d" % Received_Resp.sub)
+	
+        Hz.sleep()
+
+
+
+if __name__ == "__main__":
+    try: 
+	keypad()
+    except rospy.ROSInterruptException:
+	pass 
+
+    

@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+# license removed for brevity
+import rospy
+from myCalculator.srv import *
+
+def myCallback(req):
+    Received_Resp = srv_paramResponse()
+    Received_Resp.sum = req.First_num + req.Second_num + rospy.get_param('/sum_param')
+    Received_Resp.mul = req.First_num * req.Second_num * rospy.get_param('/mul_param')
+    Received_Resp.sub = req.First_num - req.Second_num - rospy.get_param('/sub_param') 
+    rospy.loginfo("Received [%s, %s], returning %s"%
+                                (req.First_num, req.Second_num, Received_Resp))    
+    return Received_Resp
+
+def CPU():
+    rospy.init_node('CPU_server_py')
+    rospy.Service('srv_channel', srv_param, myCallback)
+    rospy.loginfo("Ready to process two ints.")
+    rospy.spin()
+    Hz.sleep()
+
+
+
+if __name__ == "__main__":
+    try: 
+	CPU()
+    except rospy.ROSInterruptException:
+	pass 
+
+    
